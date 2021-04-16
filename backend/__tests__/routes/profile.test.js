@@ -1,13 +1,13 @@
 const request = require('supertest')
-const app = require('../app')
+const app = require('../../app')
 
 describe('Test auth routes', () => {
   it('Should response get method', (done) => {
     request(app)
-      .get('/api/v1/auth')
+      .get('/api/v1/profile/test')
       .then((response) => {
         expect(response.statusCode).toBe(200)
-        expect(response.text).toEqual('Auth route')
+        expect(response.text).toEqual('Profile route')
         done()
       })
   })
