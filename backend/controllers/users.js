@@ -7,7 +7,7 @@ const config = require('config')
 
 module.exports = {
   testRouter: (req, res) => {
-    res.send('Users route')
+    res.status(200).send('Users route')
   },
   getAllUsers: async (req, res) => {
     User.find({}, (err, foundUser) => {

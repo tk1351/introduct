@@ -20,6 +20,8 @@
     "jest": "^26.6.3",
     "mongodb-memory-server": "^6.9.6",
     "node-dev": "^6.7.0",
+    "sinon": "^10.0.0",
+    "sinon-express-mock": "^2.2.1",
     "superagent": "^6.1.0",
     "supertest": "^6.1.3"
   },
