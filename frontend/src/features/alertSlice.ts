@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../app/store'
 
-interface AlertState {
+export interface AlertState {
   id: string
   msg: string
   alertType: string
