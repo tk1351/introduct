@@ -20,7 +20,7 @@ export const alertSlice = createSlice({
   initialState,
   reducers: {
     setAlert(state, action: PayloadAction<AlertState>) {
-      state.push(action.payload)
+      return [...state, action.payload]
     },
     removeAlert(state, action: PayloadAction<{ id: string }>) {
       return state.filter((alert) => alert.id !== action.payload.id)
