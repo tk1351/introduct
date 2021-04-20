@@ -1,10 +1,26 @@
-import React, { FC } from 'react'
+import React, { FC, Fragment } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Navbar from './layout/Navbar'
+import Landing from './layout/Landing'
+import Register from './auth/Register'
+import Login from './auth/Login'
+
+import '../App.css'
 
 const App: FC = () => {
   return (
-    <div>
-      <h1>Hello World</h1>
-    </div>
+    <Router>
+      <Fragment>
+        <Navbar />
+        <Route exact path="/" component={Landing} />
+        <section className="container">
+          <Switch>
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+          </Switch>
+        </section>
+      </Fragment>
+    </Router>
   )
 }
 
