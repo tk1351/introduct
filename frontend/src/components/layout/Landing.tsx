@@ -9,10 +9,14 @@ const Landing: FC = () => {
           <h1 className="x-large">Introduct</h1>
           <p className="lead">お勧め製品を紹介しよう</p>
           <div className="buttons">
-            <Link to="/register" className="btn btn-primary">
+            <Link
+              to="/register"
+              className="btn btn-primary"
+              aria-label="register"
+            >
               ユーザー登録
             </Link>
-            <Link to="/login" className="btn btn-light">
+            <Link to="/login" className="btn btn-light" aria-label="login">
               ログイン
             </Link>
           </div>

@@ -20,7 +20,9 @@ const Login: FC = () => {
 
   return (
     <Fragment>
-      <h1 className="large text-primary">ログイン</h1>
+      <h1 className="large text-primary" aria-label="h1">
+        ログイン
+      </h1>
       <p className="lead">
         <i className="fas fa-user">アカウントへログインする</i>
       </p>

@@ -29,7 +29,7 @@ const Register: FC = () => {
       <p className="lead">
         <i className="fas fa-user"></i>アカウントを作成する
       </p>
-      <form action="" className="form" onSubmit={(e) => onSubmit(e)}>
+      <form className="form" onSubmit={(e) => onSubmit(e)}>
         <div className="form-group">
           <input
             type="text"

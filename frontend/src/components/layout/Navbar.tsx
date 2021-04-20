@@ -5,16 +5,20 @@ const Navbar: FC = () => {
   return (
     <nav className="navbar bg-dark">
       <h1>
-        <Link to="/">
+        <Link to="/" aria-label="introduct">
           <i className="fas fa-code"></i>Introduct
         </Link>
       </h1>
       <ul>
         <li>
-          <Link to="/register">ユーザー登録</Link>
+          <Link to="/register" aria-label="register">
+            ユーザー登録
+          </Link>
         </li>
         <li>
-          <Link to="/login">ログイン</Link>
+          <Link to="/login" aria-label="login">
+            ログイン
+          </Link>
         </li>
       </ul>
     </nav>
