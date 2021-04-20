@@ -1,7 +1,7 @@
 const request = require('supertest')
 const app = require('../../app')
 
-describe('Test auth routes', () => {
+describe('Test posts routes', () => {
   it('Should response get method', (done) => {
     request(app)
       .get('/api/v1/posts/test')
