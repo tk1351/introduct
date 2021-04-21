@@ -4,6 +4,8 @@ import { useAppDispatch } from '../../app/hooks'
 import { setAlert, removeAlert } from '../../features/alertSlice'
 import { v4 as uuidv4 } from 'uuid'
 import Alert from '../layout/Alert'
+import { registerUser, MyKnownError, UserData } from '../../features/authSlice'
+import { unwrapResult } from '@reduxjs/toolkit'
 
 const Register: FC = () => {
   const dispatch = useAppDispatch()
@@ -20,7 +22,7 @@ const Register: FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (password !== password2) {
       const id = uuidv4()
@@ -33,7 +35,17 @@ const Register: FC = () => {
       )
       setTimeout(() => dispatch(removeAlert({ id })), 5000)
     } else {
-      console.log(formData)
+      const userData: UserData = { name, email, password }
+      const resultAction = await dispatch(registerUser(userData))
+
+      if (registerUser.fulfilled.match(resultAction)) {
+        unwrapResult(resultAction)
+      } else if (registerUser.rejected.match(resultAction)) {
+        const payload = resultAction.payload as MyKnownError
+        const id = uuidv4()
+        dispatch(setAlert({ id, msg: payload.msg, alertType: 'danger' }))
+        setTimeout(() => dispatch(removeAlert({ id })), 5000)
+      }
     }
   }
   return (
@@ -70,7 +82,6 @@ const Register: FC = () => {
             type="password"
             placeholder="パスワード"
             name="password"
-            minLength={6}
             value={password}
             onChange={(e) => onChange(e)}
           />
@@ -80,7 +91,6 @@ const Register: FC = () => {
             type="password"
             placeholder="確認用パスワード"
             name="password2"
-            minLength={6}
             value={password2}
             onChange={(e) => onChange(e)}
           />

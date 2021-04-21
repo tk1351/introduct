@@ -31,9 +31,7 @@ module.exports = {
       // ユーザーが存在するか確認
       let user = await User.findOne({ email })
       if (user) {
-        return res
-          .status(400)
-          .send({ errors: [{ msg: '既にユーザーが存在します' }] })
+        return res.status(400).send({ msg: '既にユーザーが存在します' })
       }
 
       // Gravatarの取得
