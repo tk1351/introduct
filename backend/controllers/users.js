@@ -22,7 +22,11 @@ module.exports = {
   registerUser: async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json(
+        errors.array().map((error) => {
+          return { msg: error.msg }
+        })
+      )
     }
 
     const { name, email, avatarUrl, password } = req.body
@@ -31,7 +35,7 @@ module.exports = {
       // ユーザーが存在するか確認
       let user = await User.findOne({ email })
       if (user) {
-        return res.status(400).send({ msg: '既にユーザーが存在します' })
+        return res.status(400).send([{ msg: '既にユーザーが存在します' }])
       }
 
       // Gravatarの取得

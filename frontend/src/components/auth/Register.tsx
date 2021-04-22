@@ -41,10 +41,12 @@ const Register: FC = () => {
       if (registerUser.fulfilled.match(resultAction)) {
         unwrapResult(resultAction)
       } else if (registerUser.rejected.match(resultAction)) {
-        const payload = resultAction.payload as MyKnownError
-        const id = uuidv4()
-        dispatch(setAlert({ id, msg: payload.msg, alertType: 'danger' }))
-        setTimeout(() => dispatch(removeAlert({ id })), 5000)
+        const payloads = resultAction.payload as MyKnownError[]
+        payloads.map((payload) => {
+          const id = uuidv4()
+          dispatch(setAlert({ id, msg: payload.msg, alertType: 'danger' }))
+          setTimeout(() => dispatch(removeAlert({ id })), 5000)
+        })
       }
     }
   }
@@ -55,7 +57,7 @@ const Register: FC = () => {
       <p className="lead">
         <i className="fas fa-user"></i>アカウントを作成する
       </p>
-      <form className="form" onSubmit={(e) => onSubmit(e)}>
+      <form className="form" onSubmit={(e) => onSubmit(e)} aria-label="form">
         <div className="form-group">
           <input
             type="text"
@@ -95,7 +97,12 @@ const Register: FC = () => {
             onChange={(e) => onChange(e)}
           />
         </div>
-        <input type="submit" className="btn btn-primary" value="登録" />
+        <input
+          type="submit"
+          className="btn btn-primary"
+          value="登録"
+          aria-label="input"
+        />
       </form>
       <p className="my-1">
         既にアカウントを持っていますか？ <Link to="/login">ログイン</Link>

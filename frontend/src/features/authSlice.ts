@@ -13,7 +13,7 @@ export interface MyKnownError {
   msg: string
 }
 
-interface AuthState {
+export interface AuthState {
   auth: {
     token: string | null
     isAuthenticated: boolean
@@ -21,7 +21,7 @@ interface AuthState {
     user: UserData | null
   }
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: MyKnownError | null
+  error: MyKnownError[] | null
 }
 
 const initialState: AuthState = {
@@ -38,15 +38,15 @@ const initialState: AuthState = {
 export const registerUser = createAsyncThunk<
   { token: string; userData: UserData },
   UserData,
-  AsyncThunkConfig<MyKnownError>
->('auth/registerUser', async (userData, thunkApi) => {
+  AsyncThunkConfig<MyKnownError[]>
+>('auth/registerUser', async (userData, { rejectWithValue }) => {
   try {
     const url = '/api/v1/users'
     const res = await axios.post(url, userData)
     return { ...res.data, userData }
   } catch (err) {
     localStorage.removeItem('token')
-    return thunkApi.rejectWithValue(err.response.data)
+    return rejectWithValue(err.response.data)
   }
 })
 
@@ -61,7 +61,6 @@ const authSlice = createSlice({
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.status = 'succeeded'
       state.error = null
-      console.log('payload', action.payload)
       state.auth.isAuthenticated = true
       state.auth.loading = false
       state.auth.token = action.payload.token

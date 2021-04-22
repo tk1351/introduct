@@ -6,6 +6,7 @@ import Register from './auth/Register'
 import Login from './auth/Login'
 
 import '../App.css'
+import TestForm from './TestForm'
 
 const App: FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: FC = () => {
           <Switch>
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/testform" component={TestForm} />
           </Switch>
         </section>
       </Fragment>
