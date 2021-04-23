@@ -6,7 +6,11 @@ const Alert: FC = () => {
   const alerts = useAppSelector(selectAlert)
   const isAlert = alerts.map((alert: AlertState) =>
     alert.alertType === 'danger' ? (
-      <div key={alert.id} className={`alert alert-${alert.alertType}`}>
+      <div
+        key={alert.id}
+        className={`alert alert-${alert.alertType}`}
+        aria-laber="alert"
+      >
         {alert.msg}
       </div>
     ) : null

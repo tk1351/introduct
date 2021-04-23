@@ -7,29 +7,34 @@ import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import Register from '../../../components/auth/Register'
 import { BrowserRouter as Router } from 'react-router-dom'
-import authReducer, { UserData, AuthState } from '../../../features/authSlice'
+import authReducer, {
+  UserData,
+  AuthState,
+  AuthUser,
+} from '../../../features/authSlice'
 import { EnhancedStore, configureStore } from '@reduxjs/toolkit'
 import alertReducer, { AlertState } from '../../../features/alertSlice'
 
 const server = setupServer(
-  rest.post<UserData, { token: string; userData: UserData }>(
-    '/api/v1/users',
-    (req, res, ctx) => {
-      const { name, email, password } = req.body
-
-      return res(
-        ctx.status(200),
-        ctx.json({
-          userData: {
-            name: 'dummy name',
-            email: 'dummy@example.com',
-            password: 'testtest',
-          },
-          token: 'dummy token',
-        })
-      )
+  rest.post<
+    UserData,
+    {
+      token: string
+      userData: AuthUser
     }
-  )
+  >('/api/v1/users', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        userData: {
+          _id: 'dummy id',
+          name: 'dummy name',
+          avatar: 'dummy avatar',
+        },
+        token: 'dummy token',
+      })
+    )
+  })
 )
 
 beforeAll(() => server.listen())
@@ -185,5 +190,48 @@ describe('API Mock Test', () => {
     )
     fireEvent.submit(screen.getByLabelText('input'))
     expect(onSubmit).toBeCalled()
+  })
+  it('allows the user to register', async () => {
+    render(
+      <Provider store={store}>
+        <Router>
+          <Register />
+        </Router>
+      </Provider>
+    )
+    userEvent.type(screen.getByPlaceholderText('ユーザー名'), 'dummy name')
+    userEvent.type(
+      screen.getByPlaceholderText('メールアドレス'),
+      'dummy@example.com'
+    )
+    userEvent.type(screen.getByPlaceholderText('パスワード'), 'testtest')
+    userEvent.type(screen.getByPlaceholderText('確認用パスワード'), 'testtest')
+    fireEvent.submit(screen.getByLabelText('input'))
+    //TODO: 成否を判定
+  })
+  it('handles register exception', async () => {
+    server.use(
+      rest.post('/api/v1/users', (req, res, ctx) => {
+        return res(
+          ctx.status(400),
+          ctx.json({ msg: '確認用パスワードが異なります' })
+        )
+      })
+    )
+    render(
+      <Provider store={store}>
+        <Router>
+          <Register />
+        </Router>
+      </Provider>
+    )
+    userEvent.type(screen.getByPlaceholderText('ユーザー名'), 'dummy name')
+    userEvent.type(
+      screen.getByPlaceholderText('メールアドレス'),
+      'dummy@example.com'
+    )
+    userEvent.type(screen.getByPlaceholderText('パスワード'), 'testtest')
+    userEvent.type(screen.getByPlaceholderText('確認用パスワード'), 'testtest')
+    //TODO: 成否を判定
   })
 })

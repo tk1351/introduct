@@ -71,7 +71,7 @@ module.exports = {
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err
-          return res.json({ token })
+          return res.json({ token, userId: user.id, avatar: user.avatar })
         }
       )
     } catch (err) {

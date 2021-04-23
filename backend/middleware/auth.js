@@ -7,7 +7,9 @@ module.exports = (req, res, next) => {
 
   // tokenの有無を確認
   if (!token)
-    return res.status(401).json({ msg: 'Tokenが無いため認証が拒否されました' })
+    return res
+      .status(401)
+      .json([{ msg: 'Tokenが無いため認証が拒否されました' }])
 
   // tokenを確かめる
   try {
@@ -15,6 +17,6 @@ module.exports = (req, res, next) => {
     req.user = decoded.user
     next()
   } catch (err) {
-    res.status(401).json({ msg: 'Tokenが正しくありません' })
+    res.status(401).json([{ msg: 'Tokenが正しくありません' }])
   }
 }

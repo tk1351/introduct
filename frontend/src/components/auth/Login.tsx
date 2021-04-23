@@ -34,7 +34,6 @@ const Login: FC = () => {
             name="email"
             value={email}
             onChange={(e) => onChange(e)}
-            required
           />
         </div>
         <div className="form-group">
@@ -42,10 +41,8 @@ const Login: FC = () => {
             type="password"
             placeholder="パスワード"
             name="password"
-            minLength={6}
             value={password}
             onChange={(e) => onChange(e)}
-            required
           />
         </div>
         <input type="submit" className="btn btn-primary" value="ログイン" />
