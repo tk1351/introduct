@@ -8,7 +8,7 @@ import { setupServer } from 'msw/node'
 import Register from '../../../components/auth/Register'
 import { BrowserRouter as Router } from 'react-router-dom'
 import authReducer, {
-  UserData,
+  RegisterUser,
   AuthState,
   AuthUser,
 } from '../../../features/authSlice'
@@ -17,7 +17,7 @@ import alertReducer, { AlertState } from '../../../features/alertSlice'
 
 const server = setupServer(
   rest.post<
-    UserData,
+    RegisterUser,
     {
       token: string
       userData: AuthUser

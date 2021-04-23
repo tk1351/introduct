@@ -1,11 +1,16 @@
 import React, { FC, Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useAppDispatch } from '../../app/hooks'
+import { Link, Redirect } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setAlert, removeAlert } from '../../features/alertSlice'
 import { v4 as uuidv4 } from 'uuid'
 import Alert from '../layout/Alert'
-import { registerUser, MyKnownError, UserData } from '../../features/authSlice'
+import {
+  registerUser,
+  MyKnownError,
+  RegisterUser,
+} from '../../features/authSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { RootState } from '../../app/store'
 
 const Register: FC = () => {
   const dispatch = useAppDispatch()
@@ -35,7 +40,7 @@ const Register: FC = () => {
       )
       setTimeout(() => dispatch(removeAlert({ id })), 5000)
     } else {
-      const userData: UserData = { name, email, password }
+      const userData: RegisterUser = { name, email, password }
       const resultAction = await dispatch(registerUser(userData))
 
       if (registerUser.fulfilled.match(resultAction)) {
@@ -49,6 +54,14 @@ const Register: FC = () => {
         })
       }
     }
+  }
+
+  // login済みであればリダイレクトする
+  const isAuthenticated = useAppSelector(
+    (state: RootState) => state.auth.auth.isAuthenticated
+  )
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />
   }
   return (
     <Fragment>

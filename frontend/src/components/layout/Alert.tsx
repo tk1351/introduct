@@ -9,7 +9,7 @@ const Alert: FC = () => {
       <div
         key={alert.id}
         className={`alert alert-${alert.alertType}`}
-        aria-laber="alert"
+        aria-label="alert"
       >
         {alert.msg}
       </div>

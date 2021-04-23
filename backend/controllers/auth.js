@@ -21,7 +21,11 @@ module.exports = {
   loginUser: async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(400).json(
+        errors.array().map((error) => {
+          return { msg: error.msg }
+        })
+      )
     }
 
     const { email, password } = req.body
@@ -29,17 +33,13 @@ module.exports = {
       // ユーザーが存在するか確認
       let user = await User.findOne({ email })
       if (!user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'ユーザーが存在しません' }] })
+        return res.status(400).json([{ msg: 'ユーザーが存在しません' }])
       }
 
       // DBのパスワードと比較する
       const isMatch = await bcrypt.compare(password, user.password)
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'パスワードが正しくありません' }] })
+        return res.status(400).json([{ msg: 'パスワードが正しくありません' }])
       }
 
       // jwtを返す
@@ -52,7 +52,12 @@ module.exports = {
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err
-          return res.json({ token })
+          return res.json({
+            token,
+            userId: user.id,
+            avatar: user.avatar,
+            name: user.name,
+          })
         }
       )
     } catch (err) {

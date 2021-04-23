@@ -4,8 +4,13 @@ import { AsyncThunkConfig } from '../app/store'
 import setAuthToken from '../utils/setAuthToken'
 
 // 仮作成
-export interface UserData {
+export interface RegisterUser {
   name: string
+  email: string
+  password: string
+}
+
+export interface LoginUser {
   email: string
   password: string
 }
@@ -44,7 +49,7 @@ const initialState: AuthState = {
 
 export const registerUser = createAsyncThunk<
   { token: string; user: AuthUser },
-  UserData,
+  RegisterUser,
   AsyncThunkConfig<MyKnownError[]>
 >('auth/registerUser', async (userData, { rejectWithValue }) => {
   try {
@@ -91,6 +96,32 @@ export const loadUser = createAsyncThunk<
   }
 })
 
+export const loginUser = createAsyncThunk<
+  { token: string; user: AuthUser },
+  LoginUser,
+  AsyncThunkConfig<MyKnownError[]>
+>('auth/loginUser', async (userData, { rejectWithValue }) => {
+  try {
+    const url = '/api/v1/auth'
+    const res = await axios.post<{
+      token: string
+      userId: string
+      name: string
+      avatar: string
+    }>(url, userData)
+    localStorage.setItem('token', res.data.token)
+    const token = res.data.token
+    const user = {
+      _id: res.data.userId,
+      name: res.data.name,
+      avatar: res.data.avatar,
+    }
+    return { token, user }
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
+})
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -131,6 +162,28 @@ const authSlice = createSlice({
       state.auth.user = action.payload.user
     })
     builder.addCase(loadUser.rejected, (state, action) => {
+      if (action.payload) {
+        state.status = 'failed'
+        state.error = action.payload
+        state.auth.isAuthenticated = false
+        state.auth.loading = false
+        state.auth.token = null
+        state.auth.user = null
+      }
+    })
+    // login
+    builder.addCase(loginUser.pending, (state) => {
+      state.status = 'loading'
+    })
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      state.status = 'succeeded'
+      state.error = null
+      state.auth.isAuthenticated = true
+      state.auth.loading = false
+      state.auth.token = action.payload.token
+      state.auth.user = action.payload.user
+    })
+    builder.addCase(loginUser.rejected, (state, action) => {
       if (action.payload) {
         state.status = 'failed'
         state.error = action.payload
