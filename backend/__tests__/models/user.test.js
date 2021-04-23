@@ -7,12 +7,14 @@ const users = [
     email: 'email dummy',
     password: 'password dummy',
     avatar: 'avatar dummy',
+    role: 'dummy role',
   },
   {
     name: 'name2 dummy',
     email: 'email2 dummy',
     password: 'password2 dummy',
     avatar: 'avatar2 dummy',
+    role: 'dummy role',
   },
 ]
 
