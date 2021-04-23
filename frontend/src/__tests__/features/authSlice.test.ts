@@ -2,6 +2,7 @@ import reducer, {
   registerUser,
   AuthState,
   MyKnownError,
+  loadUser,
 } from '../../features/authSlice'
 
 describe('authReducer test', () => {
@@ -24,7 +25,7 @@ describe('authReducer test', () => {
     it('[registerUser.fulfilled] Should state include token and userData', () => {
       const dummyData = {
         token: 'dummy token',
-        userData: {
+        user: {
           name: 'dummy name',
           email: 'dummy email',
           password: 'dummy password',
@@ -36,7 +37,7 @@ describe('authReducer test', () => {
       expect(state.auth.isAuthenticated).toBeTruthy()
       expect(state.auth.loading).toBeFalsy()
       expect(state.auth.token).toEqual(dummyData.token)
-      expect(state.auth.user).toEqual(dummyData.userData)
+      expect(state.auth.user).toEqual(dummyData.user)
       expect(state.error).toBeNull()
     })
     it('[registerUser.rejected] Should state include error message', () => {
@@ -51,4 +52,49 @@ describe('authReducer test', () => {
       expect(state.error).toEqual(dummyMsg)
     })
   })
+  describe('loadUser', () => {
+    const initialState: AuthState = {
+      auth: {
+        token: 'dummy token',
+        isAuthenticated: true,
+        loading: false,
+        user: {
+          _id: '',
+          name: '',
+          avatar: '',
+        },
+      },
+      status: 'succeeded',
+      error: null,
+    }
+    it('[loadUser.pending] Should status return loading', () => {
+      const action = { type: loadUser.pending.type }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('loading')
+    })
+    it('[loadUser.fulfilled] Should user include', () => {
+      const action = {
+        type: loadUser.fulfilled.type,
+        payload: initialState.auth.user,
+      }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('succeeded')
+      expect(state.auth.isAuthenticated).toBeTruthy()
+      expect(state.auth.loading).toBeFalsy()
+      expect(state.error).toBeNull()
+    })
+    it('[loadUser.rejected] Should error include', () => {
+      const dummyMsg: MyKnownError = { msg: 'dummy error' }
+      const action = { type: loadUser.rejected.type, payload: dummyMsg }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('failed')
+      expect(state.auth.isAuthenticated).toBeFalsy()
+      expect(state.auth.loading).toBeFalsy()
+      expect(state.auth.token).toBeNull()
+      expect(state.auth.user).toBeNull()
+      expect(state.error).toEqual(dummyMsg)
+    })
+  })
 })
+
+// loadUserが正しく挙動するかテスト

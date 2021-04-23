@@ -18,13 +18,13 @@ if (localStorage.token) {
 const App: FC = () => {
   const dispatch = useAppDispatch()
 
-  const isAuthenticated = async () => {
-    const resultAction = await dispatch(loadUser())
-    if (loadUser.fulfilled.match(resultAction)) {
-      unwrapResult(resultAction)
-    }
-  }
   useEffect(() => {
+    const isAuthenticated = async () => {
+      const resultAction = await dispatch(loadUser())
+      if (loadUser.fulfilled.match(resultAction)) {
+        unwrapResult(resultAction)
+      }
+    }
     isAuthenticated()
   }, [])
   return (
