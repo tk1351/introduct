@@ -10,7 +10,8 @@ module.exports = {
   },
   getAuthUser: async (req, res) => {
     try {
-      const user = await User.findById(req.user.id).select('-password')
+      // id, name, avatarのみ返す
+      const user = await User.findById(req.user.id).select('_id name avatar')
       return res.json(user)
     } catch (err) {
       console.error(err)
