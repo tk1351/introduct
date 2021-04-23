@@ -19,6 +19,7 @@ export interface AuthUser {
   _id: string
   name: string
   avatar: string
+  role: string
 }
 
 export interface MyKnownError {
@@ -58,6 +59,7 @@ export const registerUser = createAsyncThunk<
       token: string
       userId: string
       avatar: string
+      role: string
     }>(url, userData)
     localStorage.setItem('token', res.data.token)
     const token = res.data.token
@@ -65,6 +67,7 @@ export const registerUser = createAsyncThunk<
       _id: res.data.userId,
       name: userData.name,
       avatar: res.data.avatar,
+      role: res.data.role,
     }
     return { token, user }
   } catch (err) {
@@ -89,6 +92,7 @@ export const loadUser = createAsyncThunk<
       _id: res.data._id,
       name: res.data.name,
       avatar: res.data.avatar,
+      role: res.data.role,
     }
     return { user }
   } catch (err) {
@@ -108,6 +112,7 @@ export const loginUser = createAsyncThunk<
       userId: string
       name: string
       avatar: string
+      role: string
     }>(url, userData)
     localStorage.setItem('token', res.data.token)
     const token = res.data.token
@@ -115,6 +120,7 @@ export const loginUser = createAsyncThunk<
       _id: res.data.userId,
       name: res.data.name,
       avatar: res.data.avatar,
+      role: res.data.role,
     }
     return { token, user }
   } catch (err) {

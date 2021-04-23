@@ -62,6 +62,7 @@ describe('authReducer test', () => {
           _id: '',
           name: '',
           avatar: '',
+          role: '',
         },
       },
       status: 'succeeded',

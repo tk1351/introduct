@@ -30,6 +30,7 @@ const server = setupServer(
           _id: 'dummy id',
           name: 'dummy name',
           avatar: 'dummy avatar',
+          role: 'dummy role',
         },
         token: 'dummy token',
       })

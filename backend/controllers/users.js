@@ -29,7 +29,7 @@ module.exports = {
       )
     }
 
-    const { name, email, avatarUrl, password } = req.body
+    const { name, email, avatarUrl, password, role } = req.body
 
     try {
       // ユーザーが存在するか確認
@@ -47,11 +47,14 @@ module.exports = {
             d: 'mm',
           })
 
+      const role = 'user'
+
       user = new User({
         name,
         email,
         password,
         avatar,
+        role,
       })
 
       // passwordの暗号化
@@ -71,7 +74,12 @@ module.exports = {
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err
-          return res.json({ token, userId: user.id, avatar: user.avatar })
+          return res.json({
+            token,
+            userId: user.id,
+            avatar: user.avatar,
+            role: user.role,
+          })
         }
       )
     } catch (err) {
