@@ -6,12 +6,12 @@ import {
   loginUser,
   loadUser,
   MyKnownError,
+  selectIsAuthenticated,
 } from '../../features/authSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
 import { setAlert, removeAlert } from '../../features/alertSlice'
 import Alert from '../layout/Alert'
-import { RootState } from '../../app/store'
 
 const Login: FC = () => {
   const dispatch = useAppDispatch()
@@ -45,9 +45,7 @@ const Login: FC = () => {
   }
 
   // login済みであればリダイレクトする
-  const isAuthenticated = useAppSelector(
-    (state: RootState) => state.auth.auth.isAuthenticated
-  )
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
   if (isAuthenticated) {
     return <Redirect to="/dashboard" />
   }

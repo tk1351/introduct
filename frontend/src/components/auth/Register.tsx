@@ -8,9 +8,9 @@ import {
   registerUser,
   MyKnownError,
   RegisterUser,
+  selectIsAuthenticated,
 } from '../../features/authSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
-import { RootState } from '../../app/store'
 
 const Register: FC = () => {
   const dispatch = useAppDispatch()
@@ -57,9 +57,7 @@ const Register: FC = () => {
   }
 
   // login済みであればリダイレクトする
-  const isAuthenticated = useAppSelector(
-    (state: RootState) => state.auth.auth.isAuthenticated
-  )
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
   if (isAuthenticated) {
     return <Redirect to="/dashboard" />
   }

@@ -8,6 +8,8 @@ import Navbar from './layout/Navbar'
 import Landing from './layout/Landing'
 import Register from './auth/Register'
 import Login from './auth/Login'
+import PrivateRoute from './routing/PrivateRoute'
+import Dashboard from './dashboard/Dashboard'
 
 import '../App.css'
 
@@ -36,6 +38,7 @@ const App: FC = () => {
           <Switch>
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>
         </section>
       </Fragment>

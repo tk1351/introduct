@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { AsyncThunkConfig } from '../app/store'
+import { AsyncThunkConfig, RootState } from '../app/store'
 import setAuthToken from '../utils/setAuthToken'
 
 // 仮作成
@@ -131,7 +131,16 @@ export const loginUser = createAsyncThunk<
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout(state) {
+      state.auth.token = null
+      state.auth.isAuthenticated = false
+      state.auth.loading = true
+      state.auth.user = null
+      state.status = 'idle'
+      localStorage.removeItem('token')
+    },
+  },
   extraReducers: (builder) => {
     // ユーザー登録
     builder.addCase(registerUser.pending, (state) => {
@@ -201,5 +210,11 @@ const authSlice = createSlice({
     })
   },
 })
+
+export const { logout } = authSlice.actions
+
+export const selectIsAuthenticated = (state: RootState) =>
+  state.auth.auth.isAuthenticated
+export const selectLoading = (state: RootState) => state.auth.auth.loading
 
 export default authSlice.reducer

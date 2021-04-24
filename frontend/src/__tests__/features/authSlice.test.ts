@@ -4,6 +4,7 @@ import reducer, {
   MyKnownError,
   loadUser,
   loginUser,
+  logout,
 } from '../../features/authSlice'
 
 describe('authReducer test', () => {
@@ -142,6 +143,32 @@ describe('authReducer test', () => {
       expect(state.auth.token).toBeNull()
       expect(state.auth.user).toBeNull()
       expect(state.error).toEqual(dummyMsg)
+    })
+  })
+  describe('logout', () => {
+    const initialState: AuthState = {
+      auth: {
+        token: 'dummy token',
+        isAuthenticated: true,
+        loading: false,
+        user: {
+          _id: 'dummy id',
+          name: 'dummy name',
+          avatar: 'dummy avatar',
+          role: 'dummy role',
+        },
+      },
+      status: 'succeeded',
+      error: null,
+    }
+    it('Should state empty', () => {
+      const action = { type: logout.type }
+      const state = reducer(initialState, action)
+      expect(state.auth.token).toBeNull()
+      expect(state.auth.isAuthenticated).toBeFalsy()
+      expect(state.auth.loading).toBeTruthy()
+      expect(state.auth.user).toBeNull()
+      expect(state.status).toEqual('idle')
     })
   })
 })
