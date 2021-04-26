@@ -26,13 +26,13 @@ const server = setupServer(
     return res(
       ctx.status(200),
       ctx.json({
+        token: 'dummy token',
         userData: {
           _id: 'dummy id',
           name: 'dummy name',
           avatar: 'dummy avatar',
           role: 'dummy role',
         },
-        token: 'dummy token',
       })
     )
   })
