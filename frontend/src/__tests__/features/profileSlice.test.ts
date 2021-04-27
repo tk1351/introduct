@@ -4,7 +4,7 @@ import reducer, {
   Profile,
   clearProfile,
   createProfile,
-  CreateProfile,
+  RegisterProfile,
 } from '../../features/profileSlice'
 import { MyKnownError } from 'src/features/authSlice'
 
@@ -111,7 +111,7 @@ describe('profileReducer test', () => {
       expect(state.status).toEqual('loading')
     })
     it('[createProfile.fulfilled]', () => {
-      const dummyData: CreateProfile = {
+      const dummyData: RegisterProfile = {
         company: 'dummy company',
         website: 'dummy website',
         location: 'dummy location',

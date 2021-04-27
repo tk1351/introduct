@@ -4,7 +4,7 @@ import setAuthToken from '../utils/setAuthToken'
 import { MyKnownError } from './authSlice'
 import { AsyncThunkConfig, RootState } from '../app/store'
 
-export interface CreateProfile {
+export interface RegisterProfile {
   company: string
   website: string
   location: string
@@ -84,7 +84,7 @@ export const fetchCurrentProfile = createAsyncThunk<
 
 export const createProfile = createAsyncThunk<
   { profile: Profile },
-  CreateProfile,
+  RegisterProfile,
   AsyncThunkConfig<MyKnownError[]>
 >('profile/createProfile', async (profileData, { rejectWithValue }) => {
   try {

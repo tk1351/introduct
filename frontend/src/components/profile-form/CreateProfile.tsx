@@ -1,19 +1,19 @@
 import React, { useState, Fragment } from 'react'
-import { CreateProfile, createProfile } from '../../features/profileSlice'
+import { RegisterProfile, createProfile } from '../../features/profileSlice'
 import { useAppDispatch } from '../../app/hooks'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { MyKnownError } from '../../features/authSlice'
 import { v4 as uuidv4 } from 'uuid'
 import { setAlert, removeAlert } from '../../features/alertSlice'
 import Alert from '../layout/Alert'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, Link } from 'react-router-dom'
 
 interface Props extends RouteComponentProps {}
 
 const CreateProfile = ({ history }: Props) => {
   const dispatch = useAppDispatch()
 
-  const [formData, setFormData] = useState<CreateProfile>({
+  const [formData, setFormData] = useState<RegisterProfile>({
     company: '',
     website: '',
     location: '',
@@ -48,7 +48,7 @@ const CreateProfile = ({ history }: Props) => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const profileData: CreateProfile = formData
+    const profileData: RegisterProfile = formData
     const resultAction = await dispatch(createProfile(profileData))
     if (createProfile.fulfilled.match(resultAction)) {
       unwrapResult(resultAction)
@@ -57,14 +57,13 @@ const CreateProfile = ({ history }: Props) => {
       dispatch(
         setAlert({
           id,
-          msg: 'プロフィールが設定できました',
+          msg: 'プロフィールを設定しました',
           alertType: 'success',
         })
       )
       setTimeout(() => dispatch(removeAlert({ id })), 5000)
     } else if (createProfile.rejected.match(resultAction)) {
       const payloads = resultAction.payload as MyKnownError[]
-      console.error('test', payloads)
       payloads.map((payload) => {
         const id = uuidv4()
         dispatch(setAlert({ id, msg: payload.msg, alertType: 'danger' }))
@@ -190,9 +189,9 @@ const CreateProfile = ({ history }: Props) => {
           </Fragment>
         )}
         <input type="submit" className="btn btn-primary my-1" />
-        <a href="dashboard.html" className="btn btn-light my-1">
+        <Link to="/dashboard" className="btn btn-light my-1">
           戻る
-        </a>
+        </Link>
       </form>
     </Fragment>
   )
