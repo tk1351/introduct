@@ -10,6 +10,7 @@ import { selectAuthUser } from '../../features/authSlice'
 import Spinner from '../layout/Spinner'
 import { Link } from 'react-router-dom'
 import Alert from '../layout/Alert'
+import DashboardActions from './DashboardActions'
 
 const Dashboard: FC = () => {
   const dispatch = useAppDispatch()
@@ -43,7 +44,9 @@ const Dashboard: FC = () => {
             </i>
           </p>
           {profile !== null ? (
-            <Fragment>has</Fragment>
+            <Fragment>
+              <DashboardActions />
+            </Fragment>
           ) : (
             <Fragment>
               <p aria-label="text">

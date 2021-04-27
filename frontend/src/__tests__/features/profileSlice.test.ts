@@ -3,6 +3,8 @@ import reducer, {
   fetchCurrentProfile,
   Profile,
   clearProfile,
+  createProfile,
+  CreateProfile,
 } from '../../features/profileSlice'
 import { MyKnownError } from 'src/features/authSlice'
 
@@ -93,6 +95,53 @@ describe('profileReducer test', () => {
       expect(state.profiles).toHaveLength(0)
       expect(state.loading).toBeTruthy()
       expect(state.error).toBeNull()
+    })
+  })
+  describe('createProfile', () => {
+    const initialState: ProfileState = {
+      profile: null,
+      profiles: [],
+      loading: true,
+      status: 'idle',
+      error: null,
+    }
+    it('[createProfile.pending]', () => {
+      const action = { type: createProfile.pending.type }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('loading')
+    })
+    it('[createProfile.fulfilled]', () => {
+      const dummyData: CreateProfile = {
+        company: 'dummy company',
+        website: 'dummy website',
+        location: 'dummy location',
+        bio: 'dummy bio',
+        twitter: 'dummy twitter',
+        facebook: 'dummy facebook',
+        linkedin: 'dummy linkedin',
+        instagram: 'dummy instagram',
+        youtube: 'dummy youtube',
+      }
+      const action = {
+        type: createProfile.fulfilled.type,
+        payload: { profile: dummyData },
+      }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('succeeded')
+      expect(state.profile?.company).toEqual(dummyData.company)
+      expect(state.profiles).toHaveLength(0)
+      expect(state.loading).toBeFalsy()
+      expect(state.error).toBeNull()
+    })
+    it('[createProfile.rejected]', () => {
+      const dummyMsg: MyKnownError = { msg: 'dummy error' }
+      const action = { type: createProfile.rejected.type, payload: dummyMsg }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('failed')
+      expect(state.error).toEqual(dummyMsg)
+      expect(state.profile).toBeNull()
+      expect(state.profiles).toHaveLength(0)
+      expect(state.loading).toBeFalsy()
     })
   })
 })
