@@ -9,6 +9,7 @@ import { unwrapResult } from '@reduxjs/toolkit'
 import { selectAuthUser } from '../../features/authSlice'
 import Spinner from '../layout/Spinner'
 import { Link } from 'react-router-dom'
+import Alert from '../layout/Alert'
 
 const Dashboard: FC = () => {
   const dispatch = useAppDispatch()
@@ -33,6 +34,7 @@ const Dashboard: FC = () => {
         <Spinner />
       ) : (
         <Fragment>
+          <Alert />
           <h1 className="large text-primary">Dashboard</h1>
           <p className="lead" arial-label="lead">
             <i className="fas fa-user">

@@ -3,7 +3,6 @@ import reducer, {
   fetchCurrentProfile,
   Profile,
   clearProfile,
-  profileSlice,
 } from '../../features/profileSlice'
 import { MyKnownError } from 'src/features/authSlice'
 
@@ -23,12 +22,7 @@ describe('profileReducer test', () => {
     })
     it('[fetchCurrentProfile.fulfilled] Should state include profile', () => {
       const dummyData: Profile = {
-        user: {
-          _id: 'dummy id',
-          name: 'dummy name',
-          avatar: 'dummy avatar',
-          role: 'dummy role',
-        },
+        uid: 'dummy user',
         company: 'dummy company',
         website: 'dummy website',
         location: 'dummy location',
@@ -40,6 +34,8 @@ describe('profileReducer test', () => {
           instagram: 'dummy instagram',
           youtube: 'dummy youtube',
         },
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
       const action = {
         type: fetchCurrentProfile.fulfilled.type,
@@ -69,12 +65,7 @@ describe('profileReducer test', () => {
   describe('clearProfile', () => {
     const initialState: ProfileState = {
       profile: {
-        user: {
-          _id: 'dummy id',
-          name: 'dummy name',
-          avatar: 'dummy avatar',
-          role: 'dummy role',
-        },
+        uid: 'dummy user',
         company: 'dummy company',
         website: 'dummy website',
         location: 'dummy location',
@@ -86,6 +77,8 @@ describe('profileReducer test', () => {
           instagram: 'dummy instagram',
           youtube: 'dummy youtube',
         },
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       status: 'succeeded',
       profiles: [],

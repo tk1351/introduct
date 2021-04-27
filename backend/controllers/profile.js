@@ -20,7 +20,7 @@ module.exports = {
   getProfileByUserId: async (req, res) => {
     try {
       const profile = await Profile.findOne({
-        user: req.params.user_id,
+        uid: req.params.user_id,
       }).populate('user', ['name', 'avatar'])
 
       if (!profile) {
@@ -40,7 +40,7 @@ module.exports = {
   getCurrentUserProfile: async (req, res) => {
     try {
       const profile = await Profile.findOne({
-        user: req.user.id,
+        uid: req.user.id,
       }).populate('user', ['name', 'avatar'])
       if (!profile) {
         return res
@@ -73,7 +73,7 @@ module.exports = {
 
     // profileを作成する
     const profileFields = {}
-    profileFields.user = req.user.id
+    profileFields.uid = req.user.id
     if (company) profileFields.company = company
     if (website) profileFields.website = website
     if (location) profileFields.location = location
@@ -88,11 +88,11 @@ module.exports = {
     if (youtube) profileFields.social.youtube = youtube
 
     try {
-      let profile = await Profile.findOne({ user: req.user.id })
+      let profile = await Profile.findOne({ uid: req.user.id })
       if (profile) {
         // 更新する
         profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
+          { uid: req.user.id },
           { $set: profileFields },
           { new: true }
         )
@@ -110,9 +110,9 @@ module.exports = {
   },
   deleteProfile: async (req, res) => {
     try {
-      await Profile.findOneAndRemove({ user: req.user.id })
+      await Profile.findOneAndRemove({ uid: req.user.id })
       await User.findOneAndRemove({ _id: req.user.id })
-      await Post.deleteMany({ user: req.user.id })
+      await Post.deleteMany({ uid: req.user.id })
       res.json({ msg: 'ユーザーは削除されました' })
     } catch (err) {
       console.error(err.message)

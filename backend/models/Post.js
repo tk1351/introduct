@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const PostSchema = new Schema(
   {
-    user: {
+    uid: {
       type: Schema.Types.ObjectId,
       ref: 'user',
     },

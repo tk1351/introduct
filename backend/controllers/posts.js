@@ -34,7 +34,7 @@ module.exports = {
   },
   getPostsByUserId: async (req, res) => {
     try {
-      const posts = await Post.find({ user: req.params.user_id }).sort({
+      const posts = await Post.find({ uid: req.params.user_id }).sort({
         createdAt: -1,
       })
       if (!posts) {
@@ -62,7 +62,7 @@ module.exports = {
         text: req.body.text,
         imageUrl: req.body.imageUrl,
         url: req.body.url,
-        user: req.user.id,
+        uid: req.user.id,
         name: user.name,
         avatar: user.avatar,
       })
@@ -85,7 +85,7 @@ module.exports = {
       const post = await Post.findById(req.params.post_id)
       const newComment = {
         text: req.body.text,
-        user: req.user.id,
+        uid: req.user.id,
         name: user.name,
         avatar: user.avatar,
       }
@@ -109,13 +109,13 @@ module.exports = {
 
       // 投稿が既にlikeされているか確認する
       if (
-        post.likes.filter((like) => like.user.toString() === req.user.id)
+        post.likes.filter((like) => like.uid.toString() === req.user.id)
           .length > 0
       ) {
         return res.status(400).json({ msg: '投稿は既にlikeされてます' })
       }
 
-      post.likes.unshift({ user: req.user.id })
+      post.likes.unshift({ uid: req.user.id })
       await post.save()
       res.json(post.likes)
     } catch (err) {
@@ -130,12 +130,12 @@ module.exports = {
         return res.status(404).json({ msg: '投稿がありません' })
       }
 
-      if (!post.likes.some((like) => like.user.toString() === req.user.id)) {
+      if (!post.likes.some((like) => like.uid.toString() === req.user.id)) {
         return res.status(404).json({ msg: '投稿にlikeがありません' })
       }
 
       post.likes = post.likes.filter(
-        ({ user }) => user.toString() !== req.user.id
+        ({ uid }) => uid.toString() !== req.user.id
       )
 
       await post.save()
@@ -153,7 +153,7 @@ module.exports = {
       }
 
       // 記事を投稿したユーザーか確認する
-      if (post.user.toString() !== req.user.id) {
+      if (post.uid.toString() !== req.user.id) {
         return res.status(401).json({ msg: '削除する権限がありません' })
       }
 
@@ -183,13 +183,13 @@ module.exports = {
       }
 
       // コメントをしたuserか確認する
-      if (comment.user.toString() !== req.user.id) {
+      if (comment.uid.toString() !== req.user.id) {
         return res.status(401).json({ msg: '削除する権限がありません' })
       }
 
       // 削除するコメントを取得する
       const removeIndex = post.comments.map((comment) =>
-        comment.user.toString().indexOf(req.user.id)
+        comment.uid.toString().indexOf(req.user.id)
       )
 
       post.comments.splice(removeIndex, 1)

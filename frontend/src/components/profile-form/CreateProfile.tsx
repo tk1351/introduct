@@ -1,7 +1,19 @@
-import React, { FC, useState, Fragment } from 'react'
+import React, { useState, Fragment } from 'react'
+import { CreateProfile, createProfile } from '../../features/profileSlice'
+import { useAppDispatch } from '../../app/hooks'
+import { unwrapResult } from '@reduxjs/toolkit'
+import { MyKnownError } from '../../features/authSlice'
+import { v4 as uuidv4 } from 'uuid'
+import { setAlert, removeAlert } from '../../features/alertSlice'
+import Alert from '../layout/Alert'
+import { RouteComponentProps } from 'react-router-dom'
 
-const CreateProfile: FC = () => {
-  const [formData, setFormData] = useState({
+interface Props extends RouteComponentProps {}
+
+const CreateProfile = ({ history }: Props) => {
+  const dispatch = useAppDispatch()
+
+  const [formData, setFormData] = useState<CreateProfile>({
     company: '',
     website: '',
     location: '',
@@ -33,14 +45,42 @@ const CreateProfile: FC = () => {
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const profileData: CreateProfile = formData
+    const resultAction = await dispatch(createProfile(profileData))
+    if (createProfile.fulfilled.match(resultAction)) {
+      unwrapResult(resultAction)
+      history.push('/dashboard')
+      const id = uuidv4()
+      dispatch(
+        setAlert({
+          id,
+          msg: 'プロフィールが設定できました',
+          alertType: 'success',
+        })
+      )
+      setTimeout(() => dispatch(removeAlert({ id })), 5000)
+    } else if (createProfile.rejected.match(resultAction)) {
+      const payloads = resultAction.payload as MyKnownError[]
+      console.error('test', payloads)
+      payloads.map((payload) => {
+        const id = uuidv4()
+        dispatch(setAlert({ id, msg: payload.msg, alertType: 'danger' }))
+        setTimeout(() => dispatch(removeAlert({ id })), 5000)
+      })
+    }
+  }
   return (
     <Fragment>
+      <Alert />
       <h1 className="large text-primary">プロフィール設定</h1>
       <p className="lead">
         <i className="fas fa-user"></i> 詳細を設定してください
       </p>
       <small>* = 必要事項</small>
-      <form className="form">
+      <form className="form" onSubmit={(e) => onSubmit(e)}>
         <div className="form-group">
           <input
             type="text"

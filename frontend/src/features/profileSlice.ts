@@ -1,15 +1,29 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import setAuthToken from '../utils/setAuthToken'
-import { AuthUser, MyKnownError } from './authSlice'
+import { MyKnownError } from './authSlice'
 import { AsyncThunkConfig, RootState } from '../app/store'
 
-export interface Profile {
-  user: AuthUser
+export interface CreateProfile {
   company: string
   website: string
   location: string
   bio: string
+  twitter: string
+  facebook: string
+  linkedin: string
+  instagram: string
+  youtube: string
+}
+
+export interface Profile {
+  uid: string
+  company: string
+  website: string
+  location: string
+  bio: string
+  createdAt: Date
+  updatedAt: Date
   social: {
     twitter: string
     facebook: string
@@ -35,7 +49,6 @@ const initialState: ProfileState = {
   error: null,
 }
 
-// 返り値 userのプロフィール
 export const fetchCurrentProfile = createAsyncThunk<
   { profile: Profile },
   void,
@@ -48,7 +61,7 @@ export const fetchCurrentProfile = createAsyncThunk<
     const url = '/api/v1/profile/me'
     const res = await axios.get<Profile>(url)
     const profile = {
-      user: res.data.user,
+      uid: res.data.uid,
       company: res.data.company,
       website: res.data.website,
       location: res.data.location,
@@ -60,10 +73,26 @@ export const fetchCurrentProfile = createAsyncThunk<
         instagram: res.data.social.instagram,
         youtube: res.data.social.youtube,
       },
+      createdAt: res.data.createdAt,
+      updatedAt: res.data.updatedAt,
     }
     return { profile }
   } catch (err) {
     return rejectWithValue(err.response.data)
+  }
+})
+
+export const createProfile = createAsyncThunk<
+  { profile: Profile },
+  CreateProfile,
+  AsyncThunkConfig<MyKnownError[]>
+>('profile/createProfile', async (profileData, { rejectWithValue }) => {
+  try {
+    const url = '/api/v1/profile'
+    const res = await axios.post<Profile>(url, profileData)
+    return { profile: res.data }
+  } catch (err) {
+    return rejectWithValue(err.response.data.errors)
   }
 })
 
@@ -92,6 +121,26 @@ export const profileSlice = createSlice({
       state.error = null
     })
     builder.addCase(fetchCurrentProfile.rejected, (state, action) => {
+      if (action.payload) {
+        state.status = 'failed'
+        state.error = action.payload
+        state.profile = null
+        state.profiles = []
+        state.loading = false
+      }
+    })
+    // profileの追加
+    builder.addCase(createProfile.pending, (state) => {
+      state.status = 'loading'
+    })
+    builder.addCase(createProfile.fulfilled, (state, action) => {
+      state.status = 'succeeded'
+      state.profile = action.payload.profile
+      state.profiles = []
+      state.loading = false
+      state.error = null
+    })
+    builder.addCase(createProfile.rejected, (state, action) => {
       if (action.payload) {
         state.status = 'failed'
         state.error = action.payload
