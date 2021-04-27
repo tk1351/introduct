@@ -34,7 +34,7 @@ const Dashboard: FC = () => {
       ) : (
         <Fragment>
           <h1 className="large text-primary">Dashboard</h1>
-          <p className="lead">
+          <p className="lead" arial-label="lead">
             <i className="fas fa-user">
               ようこそ {authUser && authUser.name} さん
             </i>
@@ -43,8 +43,14 @@ const Dashboard: FC = () => {
             <Fragment>has</Fragment>
           ) : (
             <Fragment>
-              <p>プロフィールが設定されていません。設定してください。</p>
-              <Link to="/create-profile" className="btn btn-primary my-1">
+              <p aria-label="text">
+                プロフィールが設定されていません。設定してください。
+              </p>
+              <Link
+                to="/create-profile"
+                className="btn btn-primary my-1"
+                aria-label="link"
+              >
                 プロフィールを設定する
               </Link>
             </Fragment>

@@ -4,7 +4,7 @@ import setAuthToken from '../utils/setAuthToken'
 import { AuthUser, MyKnownError } from './authSlice'
 import { AsyncThunkConfig, RootState } from '../app/store'
 
-interface Profile {
+export interface Profile {
   user: AuthUser
   company: string
   website: string
@@ -19,7 +19,7 @@ interface Profile {
   }
 }
 
-interface ProfileState {
+export interface ProfileState {
   profile: Profile | null
   profiles: Profile[]
   loading: boolean
@@ -72,9 +72,10 @@ export const profileSlice = createSlice({
   initialState,
   reducers: {
     clearProfile(state) {
+      state.status = 'idle'
       state.profile = null
       state.profiles = []
-      state.loading = false
+      state.loading = true
       state.error = null
     },
   },
