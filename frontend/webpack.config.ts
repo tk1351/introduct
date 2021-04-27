@@ -55,7 +55,7 @@ const option: WebpackOptionsNormalized = {
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        use: [{ loader: 'file-loader' }],
+        loader: 'file-loader',
       },
     ],
   },

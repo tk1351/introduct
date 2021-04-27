@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import setAuthToken from '../utils/setAuthToken'
 import { AuthUser, MyKnownError } from './authSlice'
-import { AsyncThunkConfig } from 'src/app/store'
+import { AsyncThunkConfig, RootState } from '../app/store'
 
 interface Profile {
   user: AuthUser
@@ -63,7 +63,6 @@ export const fetchCurrentProfile = createAsyncThunk<
     }
     return { profile }
   } catch (err) {
-    console.error(err.response.data)
     return rejectWithValue(err.response.data)
   }
 })
@@ -71,19 +70,41 @@ export const fetchCurrentProfile = createAsyncThunk<
 export const profileSlice = createSlice({
   name: 'profile',
   initialState,
-  reducers: {},
+  reducers: {
+    clearProfile(state) {
+      state.profile = null
+      state.profiles = []
+      state.loading = false
+      state.error = null
+    },
+  },
   extraReducers: (builder) => {
     // tokenがsetされているユーザーのprofileを取得
     builder.addCase(fetchCurrentProfile.pending, (state) => {
       state.status = 'loading'
     })
-    builder.addCase(fetchCurrentProfile.fulfilled, (state) => {
+    builder.addCase(fetchCurrentProfile.fulfilled, (state, action) => {
       state.status = 'succeeded'
+      state.profile = action.payload.profile
+      state.profiles = []
+      state.loading = false
+      state.error = null
     })
-    builder.addCase(fetchCurrentProfile.rejected, (state) => {
-      state.status = 'failed'
+    builder.addCase(fetchCurrentProfile.rejected, (state, action) => {
+      if (action.payload) {
+        state.status = 'failed'
+        state.error = action.payload
+        state.profile = null
+        state.profiles = []
+        state.loading = false
+      }
     })
   },
 })
+
+export const { clearProfile } = profileSlice.actions
+
+export const selectProfile = (state: RootState) => state.profile.profile
+export const selectProfileLoading = (state: RootState) => state.profile.loading
 
 export default profileSlice.reducer

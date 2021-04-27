@@ -1,7 +1,13 @@
 import React, { FC } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import { useAppSelector } from '../../app/hooks'
+import { selectIsAuthenticated } from '../../features/authSlice'
 
 const Landing: FC = () => {
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />
+  }
   return (
     <section className="landing">
       <div className="dark-overlay">

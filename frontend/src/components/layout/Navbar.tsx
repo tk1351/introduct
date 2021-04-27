@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react'
+import React, { Fragment, FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import {
@@ -6,6 +6,7 @@ import {
   selectIsAuthenticated,
   selectLoading,
 } from '../../features/authSlice'
+import { clearProfile } from '../../features/profileSlice'
 
 const Navbar: FC = () => {
   const dispatch = useAppDispatch()
@@ -13,10 +14,15 @@ const Navbar: FC = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated)
   const loading = useAppSelector(selectLoading)
 
+  const clearUsersState = () => {
+    dispatch(clearProfile())
+    dispatch(logout())
+  }
+
   const authLinks = (
     <ul>
       <li>
-        <a onClick={() => console.log('logout')}>
+        <a onClick={() => clearUsersState()}>
           <i className="fas fa-sign-out-alt"></i>{' '}
           <span className="hide-sm">ログアウト</span>
         </a>
