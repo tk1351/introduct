@@ -36,6 +36,7 @@ const Dashboard: FC = () => {
           <h1 className="large text-primary">Dashboard</h1>
           <p className="lead" arial-label="lead">
             <i className="fas fa-user">
+              {' '}
               ようこそ {authUser && authUser.name} さん
             </i>
           </p>
