@@ -25,6 +25,19 @@ services:
     depends_on:
       - mongo
 
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile.dev
+    ports:
+      - 3001:3001
+    volumes:
+      - ./api:/api
+    tty: true
+    command: 'yarn dev'
+    depends_on:
+      - mongo
+
   mongo:
     image: mongo:latest
     restart: always
