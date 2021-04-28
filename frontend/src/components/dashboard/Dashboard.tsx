@@ -6,7 +6,6 @@ import {
   selectProfileLoading,
   deleteProfile,
 } from '../../features/profileSlice'
-import { unwrapResult } from '@reduxjs/toolkit'
 import { selectAuthUser, logout } from '../../features/authSlice'
 import Spinner from '../layout/Spinner'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -25,13 +24,7 @@ const Dashboard = ({ history }: Props) => {
   const loading = useAppSelector(selectProfileLoading)
 
   useEffect(() => {
-    const profileMe = async () => {
-      const resultAction = await dispatch(fetchCurrentProfile())
-      if (fetchCurrentProfile.fulfilled.match(resultAction)) {
-        unwrapResult(resultAction)
-      }
-    }
-    profileMe()
+    dispatch(fetchCurrentProfile())
   }, [])
 
   const deleteAccount = async () => {

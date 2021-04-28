@@ -60,23 +60,7 @@ export const fetchCurrentProfile = createAsyncThunk<
   try {
     const url = '/api/v1/profile/me'
     const res = await axios.get<Profile>(url)
-    const profile = {
-      uid: res.data.uid,
-      company: res.data.company,
-      website: res.data.website,
-      location: res.data.location,
-      bio: res.data.bio,
-      social: {
-        twitter: res.data.social.twitter,
-        facebook: res.data.social.facebook,
-        linkedin: res.data.social.linkedin,
-        instagram: res.data.social.instagram,
-        youtube: res.data.social.youtube,
-      },
-      createdAt: res.data.createdAt,
-      updatedAt: res.data.updatedAt,
-    }
-    return { profile }
+    return { profile: res.data }
   } catch (err) {
     return rejectWithValue(err.response.data)
   }
