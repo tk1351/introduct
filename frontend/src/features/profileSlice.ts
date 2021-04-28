@@ -96,6 +96,22 @@ export const createProfile = createAsyncThunk<
   }
 })
 
+// プロフィール削除の関数
+// res.data = msg: 'ユーザーは削除されました'
+export const deleteProfile = createAsyncThunk<
+  { msg: string },
+  void,
+  AsyncThunkConfig<MyKnownError[]>
+>('profile/deleteProfile', async (_, { rejectWithValue }) => {
+  try {
+    const url = '/api/v1/profile'
+    const res = await axios.delete<{ msg: string }>(url)
+    return res.data
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
+})
+
 export const profileSlice = createSlice({
   name: 'profile',
   initialState,
@@ -146,6 +162,23 @@ export const profileSlice = createSlice({
         state.error = action.payload
         state.profile = null
         state.profiles = []
+        state.loading = false
+      }
+    })
+    // profileの削除
+    builder.addCase(deleteProfile.pending, (state) => {
+      state.status = 'loading'
+    })
+    builder.addCase(deleteProfile.fulfilled, (state) => {
+      state.status = 'succeeded'
+      state.profile = null
+      state.loading = false
+      state.error = null
+    })
+    builder.addCase(deleteProfile.rejected, (state, action) => {
+      if (action.payload) {
+        state.status = 'failed'
+        state.error = action.payload
         state.loading = false
       }
     })

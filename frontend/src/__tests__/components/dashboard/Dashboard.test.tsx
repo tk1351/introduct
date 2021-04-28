@@ -8,10 +8,16 @@ import { EnhancedStore, configureStore } from '@reduxjs/toolkit'
 import authReducer, { AuthState } from '../../../features/authSlice'
 import alertReducer, { AlertState } from '../../../features/alertSlice'
 import profileReducer, { ProfileState } from '../../../features/profileSlice'
-import { Router } from 'react-router-dom'
+import { Router, RouteComponentProps } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
 afterEach(() => cleanup())
+
+const mockRouteComponentProps = {
+  history: {},
+  location: {},
+  match: {},
+} as RouteComponentProps
 
 describe('Rendering', () => {
   let store: EnhancedStore<{
@@ -33,7 +39,7 @@ describe('Rendering', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <Dashboard />
+          <Dashboard {...mockRouteComponentProps} />
         </Router>
       </Provider>
     )
@@ -63,7 +69,7 @@ describe('Router test', () => {
     render(
       <Provider store={store}>
         <Router history={history}>
-          <Dashboard />
+          <Dashboard {...mockRouteComponentProps} />
         </Router>
       </Provider>
     )
