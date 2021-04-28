@@ -77,3 +77,34 @@ describe('Router test', () => {
     expect(history.location.pathname).toBe('/create-profile')
   })
 })
+
+describe('API Mock Test', () => {
+  let store: EnhancedStore<{
+    auth: AuthState
+    alert: AlertState[]
+    profile: ProfileState
+  }>
+  beforeEach(() => {
+    store = configureStore({
+      reducer: {
+        auth: authReducer,
+        alert: alertReducer,
+        profile: profileReducer,
+      },
+    })
+  })
+  it('[Delete success] Should dispatch correctly', () => {
+    const deleteAccount = jest.fn()
+    render(
+      <Provider store={store}>
+        <div className="my-2">
+          <button className="btn btn-danger" onClick={() => deleteAccount()}>
+            <i className="fas fa-user-minus"></i> アカウントの削除
+          </button>
+        </div>
+      </Provider>
+    )
+    userEvent.click(screen.getByRole('button'))
+    expect(deleteAccount).toBeCalled()
+  })
+})
