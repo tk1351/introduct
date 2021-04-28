@@ -155,6 +155,7 @@ const EditProfile = ({ history }: Props) => {
           <button
             type="button"
             className="btn btn-light"
+            aria-label="button"
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
           >
             SNSのリンクを追加する
