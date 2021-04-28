@@ -12,6 +12,7 @@ import PrivateRoute from './routing/PrivateRoute'
 import Dashboard from './dashboard/Dashboard'
 import CreateProfile from './profile-form/CreateProfile'
 import EditProfile from './profile-form/EditProfile'
+import Profiles from './profiles/Profiles'
 
 import '../App.css'
 
@@ -40,6 +41,7 @@ const App: FC = () => {
           <Switch>
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/profiles" component={Profiles} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute
               exact

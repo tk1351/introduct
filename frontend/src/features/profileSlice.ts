@@ -66,6 +66,36 @@ export const fetchCurrentProfile = createAsyncThunk<
   }
 })
 
+// 返り値はProfile[]
+// "social": {
+//   "twitter": "https://twitter.com/testuser2",
+//   "facebook": "https://facebook.com/testuser2",
+//   "youtube": "https://youtube.com/testuser2"
+// },
+// "_id": "6087a2148c3624005eeadf44",
+// "uid": "6082649c3b6e9e00246d239a",
+// "company": "Media",
+// "website": "https://www.media.com",
+// "location": "Tokyo",
+// "bio": "gjさlfjさlkfjさ",
+// "createdAt": "2021-04-27T05:33:08.728Z",
+// "updatedAt": "2021-04-27T23:49:47.062Z",
+// "__v": 0
+
+export const fetchAllProfile = createAsyncThunk<
+  { profiles: Profile[] },
+  void,
+  AsyncThunkConfig<MyKnownError[]>
+>('profile/fetchAllProfile', async (_, { rejectWithValue }) => {
+  try {
+    const url = '/api/v1/profile'
+    const res = await axios.get<Profile[]>(url)
+    return { profiles: res.data }
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
+})
+
 export const createProfile = createAsyncThunk<
   { profile: Profile },
   RegisterProfile,
@@ -129,6 +159,24 @@ export const profileSlice = createSlice({
         state.loading = false
       }
     })
+    // 全てのprofileを取得
+    builder.addCase(fetchAllProfile.pending, (state) => {
+      state.status = 'loading'
+    })
+    builder.addCase(fetchAllProfile.fulfilled, (state, action) => {
+      state.status = 'succeeded'
+      state.profiles = action.payload.profiles
+      state.loading = false
+      state.error = null
+    })
+    builder.addCase(fetchAllProfile.rejected, (state, action) => {
+      if (action.payload) {
+        state.status = 'failed'
+        state.error = action.payload
+        state.profiles = []
+        state.loading = false
+      }
+    })
     // profileの追加
     builder.addCase(createProfile.pending, (state) => {
       state.status = 'loading'
@@ -173,5 +221,6 @@ export const { clearProfile } = profileSlice.actions
 
 export const selectProfile = (state: RootState) => state.profile.profile
 export const selectProfileLoading = (state: RootState) => state.profile.loading
+export const selectProfiles = (state: RootState) => state.profile.profiles
 
 export default profileSlice.reducer
