@@ -3,6 +3,6 @@ import profileController from '../controllers/profile'
 
 const router = express.Router()
 
-router.get('/', profileController.testRouter)
+router.get('/test', profileController.testRouter)
 
 export default router

@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose'
 const Schema = mongoose.Schema
 
-export interface User extends Document {
+export interface UserModel extends Document {
   name: string
   email: string
   password: string
@@ -34,4 +34,4 @@ const UserSchema = new Schema(
   { timestamps: true }
 )
 
-export default mongoose.model<User>('user', UserSchema)
+export default mongoose.model<UserModel>('user', UserSchema)

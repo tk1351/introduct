@@ -1,7 +1,7 @@
 import express from 'express'
 
 export default {
-  testRouter: (req: express.Request, res: express.Response) => {
+  testRouter: (_: express.Request, res: express.Response): void => {
     res.send('auth router')
   },
 }

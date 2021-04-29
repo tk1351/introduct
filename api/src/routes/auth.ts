@@ -3,6 +3,6 @@ import authController from '../controllers/auth'
 
 const router = express.Router()
 
-router.get('/', authController.testRouter)
+router.get('/test', authController.testRouter)
 
 export default router

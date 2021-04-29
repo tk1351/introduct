@@ -7,7 +7,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/v1', router)
 
-app.get('/', (_: express.Request, res: express.Response) => {
+app.get('/', (_: express.Request, res: express.Response): void => {
   res.send('Hello world')
 })
 
