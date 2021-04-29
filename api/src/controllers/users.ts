@@ -35,7 +35,10 @@ export default {
       return res.status(200).json(foundUser)
     })
   },
-  registerUser: async (req: Request, res: Response) => {
+  registerUser: async (
+    req: Request<any, any, RegisterBody, any, any>,
+    res: Response
+  ) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json(
@@ -45,7 +48,7 @@ export default {
       )
     }
 
-    const { name, email, avatarUrl, password }: RegisterBody = req.body
+    const { name, email, avatarUrl, password } = req.body
 
     try {
       // ユーザーが存在するか確認
