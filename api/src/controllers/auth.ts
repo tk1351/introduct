@@ -5,6 +5,7 @@ import { validationResult } from 'express-validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import { ResponseBody } from './users'
 
 dotenv.config()
 
@@ -34,7 +35,7 @@ export default {
   },
   loginUser: async (
     req: Request<any, any, LoginBody, any, any>,
-    res: Response
+    res: Response<ResponseBody | { msg: string }[]>
   ) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -74,7 +75,7 @@ export default {
           if (err) throw err
           return res.json({
             token,
-            userId: user.id as string,
+            userId: user.id,
             avatar: user.avatar,
             role: user.role,
           })
@@ -82,7 +83,7 @@ export default {
       )
     } catch (err) {
       console.error(err.message)
-      res.status(500).send('Server error')
+      res.status(500).send([{ msg: 'Server error' }])
     }
   },
 }

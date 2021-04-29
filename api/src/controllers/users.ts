@@ -21,6 +21,13 @@ interface RegisterBody {
   password: string
 }
 
+export interface ResponseBody {
+  token: string | undefined
+  userId: string
+  avatar: string
+  role: string
+}
+
 export default {
   testRouter: (_: Request, res: Response): void => {
     res.send('users router')
@@ -36,8 +43,8 @@ export default {
     })
   },
   registerUser: async (
-    req: Request<any, any, RegisterBody, any, any>,
-    res: Response
+    req: Request<any, any, RegisterBody>,
+    res: Response<ResponseBody | { msg: string }[]>
   ) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -92,7 +99,7 @@ export default {
           if (err) throw err
           return res.json({
             token,
-            userId: user.id as string,
+            userId: user.id,
             avatar: user.avatar,
             role: user.role,
           })
@@ -100,7 +107,7 @@ export default {
       )
     } catch (err) {
       console.error(err)
-      res.status(500).send('Server Error')
+      res.status(500).send([{ msg: 'Server Error' }])
     }
   },
 }
