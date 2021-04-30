@@ -10,7 +10,7 @@ module.exports = {
   getAllProfiles: async (req, res) => {
     try {
       // Profileのrefからnameとavatarを追加する
-      const profiles = await Profile.find().populate('user', ['name', 'avatar'])
+      const profiles = await Profile.find().populate('uid', ['name', 'avatar'])
       res.json(profiles)
     } catch (err) {
       console.error(err.message)
@@ -21,7 +21,7 @@ module.exports = {
     try {
       const profile = await Profile.findOne({
         uid: req.params.user_id,
-      }).populate('user', ['name', 'avatar'])
+      }).populate('uid', ['name', 'avatar'])
 
       if (!profile) {
         return res
@@ -41,7 +41,7 @@ module.exports = {
     try {
       const profile = await Profile.findOne({
         uid: req.user.id,
-      }).populate('user', ['name', 'avatar'])
+      }).populate('uid', ['name', 'avatar'])
       if (!profile) {
         return res
           .status(400)

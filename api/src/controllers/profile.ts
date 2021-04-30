@@ -35,6 +35,41 @@ export default {
   testRouter: (_: Request, res: Response): void => {
     res.send('profile router')
   },
+  getAllProfiles: async (
+    _: Request,
+    res: Response<ProfileModel[] | { msg: string }>
+  ) => {
+    try {
+      const profiles = await Profile.find().populate('uid', ['name', 'avatar'])
+      res.json(profiles)
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).send({ msg: 'Server Error' })
+    }
+  },
+  getProfileByUserId: async (
+    req: Request,
+    res: Response<ProfileModel | { msg: string }>
+  ) => {
+    try {
+      const profile = (await Profile.findOne({
+        uid: req.params.user_id,
+      }).populate('uid', ['name', 'avatar'])) as ProfileModel
+
+      if (!profile) {
+        return res
+          .status(400)
+          .json({ msg: 'このユーザーのプロフィールは存在しません' })
+      }
+      res.json(profile)
+    } catch (err) {
+      console.error(err.message)
+      if (err.kind === 'ObjectId') {
+        return res.status(400).json({ msg: 'プロフィールは存在しません' })
+      }
+      res.status(500).send({ msg: 'Server Error' })
+    }
+  },
   getCurrentUserProfile: async (
     req: Request<any, any, ReqAuthUser>,
     res: Response<ProfileModel | { msg: string }>
@@ -42,7 +77,7 @@ export default {
     try {
       const profile = await Profile.findOne({
         uid: req.body.user.id,
-      }).populate('user', ['name', 'avatar'])
+      }).populate('uid', ['name', 'avatar'])
       if (!profile) {
         return res
           .status(400)

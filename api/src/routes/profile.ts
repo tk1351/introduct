@@ -6,6 +6,8 @@ import { check } from 'express-validator'
 const router = express.Router()
 
 router.get('/test', profileController.testRouter)
+router.get('/', profileController.getAllProfiles)
+router.get('/user/:user_id', profileController.getProfileByUserId)
 router.get('/me', auth, profileController.getCurrentUserProfile)
 router.post(
   '/',
