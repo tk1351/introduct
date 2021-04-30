@@ -49,7 +49,7 @@ export default {
     }
   },
   getProfileByUserId: async (
-    req: Request,
+    req: Request<{ user_id: string }>,
     res: Response<ProfileModel | { msg: string }>
   ) => {
     try {
