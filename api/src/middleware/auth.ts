@@ -1,21 +1,21 @@
 import express, { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import { ProfileBody } from '../controllers/profile'
 
 dotenv.config()
 
-export interface ReqUser {
+export interface ReqAuthUser {
   user: { id: string }
 }
 
-interface DecodedUser {
-  user: { id: string }
+interface DecodedUser extends ReqAuthUser {
   iat: number
   exp: number
 }
 
 export const auth = (
-  req: Request<string, any, ReqUser, any>,
+  req: Request<any, any, ReqAuthUser | ProfileBody, any>,
   res: Response,
   next: NextFunction
 ) => {

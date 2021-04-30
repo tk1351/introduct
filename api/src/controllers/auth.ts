@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import User, { UserModel } from '../models/User'
-import { ReqUser } from '../middleware/auth'
+import { ReqAuthUser } from '../middleware/auth'
 import { validationResult } from 'express-validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -19,8 +19,8 @@ export default {
     res.send('auth router')
   },
   getAuthUser: async (
-    req: Request<string, any, ReqUser, any>,
-    res: Response
+    req: Request<string, any, ReqAuthUser>,
+    res: Response<UserModel | { msg: string }>
   ) => {
     try {
       // id, name, avatarのみを返す
@@ -30,11 +30,11 @@ export default {
       return res.json(user)
     } catch (err) {
       console.error(err)
-      return res.status(500).send('Server Error')
+      return res.status(500).send({ msg: 'Server Error' })
     }
   },
   loginUser: async (
-    req: Request<any, any, LoginBody, any, any>,
+    req: Request<any, any, LoginBody>,
     res: Response<ResponseBody | { msg: string }[]>
   ) => {
     const errors = validationResult(req)
