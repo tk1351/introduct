@@ -18,6 +18,7 @@ router.post(
   postsController.createPost
 )
 router.put('/like/:post_id', auth, postsController.likePost)
+router.put('/unlike/:post_id', auth, postsController.unlikePost)
 router.delete('/:post_id', auth, postsController.deletePost)
 
 export default router

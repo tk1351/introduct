@@ -10,16 +10,14 @@ export interface PostModel extends Document {
   text: string
   imageUrl: string
   url: string
-  likes: [{ uid: string }]
-  comments: [
-    {
-      uid: string
-      text: string
-      name: string
-      avatar: string
-      date: Date
-    }
-  ]
+  likes: { uid: string }[]
+  comments: {
+    uid: string
+    text: string
+    name: string
+    avatar: string
+    date: Date
+  }[]
   createdAt: Date
   updatedAt: Date
 }
