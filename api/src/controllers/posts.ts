@@ -99,6 +99,31 @@ export default {
       res.status(500).send([{ msg: 'Server Error' }])
     }
   },
+  likePost: async (
+    req: Request<{ post_id: string }, any, PostBody>,
+    res: Response<{ uid: string }[] | { msg: string }>
+  ) => {
+    try {
+      const post = await Post.findById(req.params.post_id)
+      if (!post) {
+        return res.status(404).json({ msg: '投稿がありません' })
+      }
+
+      // 投稿が既にlikeされているか確認する
+      if (
+        post.likes.filter((like) => like.uid === req.body.user.id).length > 0
+      ) {
+        return res.status(400).json({ msg: '投稿は既にlikeされてます' })
+      }
+
+      post.likes.unshift({ uid: req.body.user.id })
+      await post.save()
+      res.json(post.likes)
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).send({ msg: 'Server Error' })
+    }
+  },
   deletePost: async (
     req: Request<{ post_id: string }, any, PostBody>,
     res: Response<{ msg: string }>
