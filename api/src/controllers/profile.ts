@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import Profile, { ProfileModel } from '../models/Profile'
+import User from '../models/User'
 import { ReqAuthUser } from '../middleware/auth'
 import { validationResult } from 'express-validator'
 
@@ -163,6 +164,20 @@ export default {
     } catch (err) {
       console.error(err.message)
       res.status(500).send([{ msg: 'Server Error' }])
+    }
+  },
+  deleteProfile: async (
+    req: Request<any, any, ProfileBody>,
+    res: Response<{ msg: string }>
+  ) => {
+    try {
+      // @todo - ユーザーの投稿も削除する
+      await Profile.findOneAndRemove({ uid: req.body.user.id })
+      await User.findOneAndRemove({ _id: req.body.user.id })
+      res.json({ msg: 'ユーザーは削除されました' })
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).send({ msg: 'Server Error' })
     }
   },
 }

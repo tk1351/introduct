@@ -14,5 +14,6 @@ router.post(
   [auth, check('bio', '自己紹介が必要です').not().isEmpty()],
   profileController.createAndUpdateUserProfile
 )
+router.delete('/', auth, profileController.deleteProfile)
 
 export default router
