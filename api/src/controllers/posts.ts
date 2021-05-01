@@ -20,6 +20,14 @@ interface PostFields {
   avatar: string
 }
 
+interface CommentFields {
+  uid: string
+  text: string
+  name: string
+  avatar: string
+  date: Date
+}
+
 export default {
   testRouter: (_: Request, res: Response): void => {
     res.send('posts router')
@@ -99,6 +107,49 @@ export default {
       res.status(500).send([{ msg: 'Server Error' }])
     }
   },
+  createComment: async (
+    req: Request<{ post_id: string }, any, PostBody>,
+    res: Response<CommentFields[] | { msg: string }[]>
+  ) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json(
+        errors.array().map((error) => {
+          return { msg: error.msg }
+        })
+      )
+    }
+
+    try {
+      const user = (await User.findById(req.body.user.id).select(
+        '-password'
+      )) as UserModel
+      const post = (await Post.findById(req.params.post_id)) as PostModel
+      const commentFields: CommentFields = {
+        text: '',
+        uid: '',
+        name: '',
+        avatar: '',
+        date: new Date(),
+      }
+
+      commentFields.text = req.body.text
+      commentFields.uid = req.body.user.id
+      commentFields.name = user.name
+      commentFields.avatar = user.avatar
+      commentFields.date = new Date()
+
+      post.comments.unshift(commentFields)
+      await post.save()
+      res.json(post.comments)
+    } catch (err) {
+      console.error(err.message)
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json([{ msg: '投稿がありません' }])
+      }
+      res.status(500).send([{ msg: 'Server Error' }])
+    }
+  },
   likePost: async (
     req: Request<{ post_id: string }, any, PostBody>,
     res: Response<{ uid: string }[] | { msg: string }>
@@ -168,6 +219,39 @@ export default {
       if (err.kind === 'ObjectId') {
         return res.status(404).json({ msg: '投稿がありません' })
       }
+      res.status(500).send({ msg: 'Server Error' })
+    }
+  },
+  deleteComment: async (
+    req: Request<{ post_id: string; comment_id: string }, any, PostBody>,
+    res: Response<CommentFields[] | { msg: string }>
+  ) => {
+    try {
+      const post = (await Post.findById(req.params.post_id)) as PostModel
+      if (!post) {
+        return res.status(404).json({ msg: '投稿がありません' })
+      }
+
+      // コメントを取得する
+      const comment = post.comments.find(
+        (comment) => comment?._id == req.params.comment_id
+      )
+      if (!comment) {
+        return res.status(404).json({ msg: 'コメントがありません' })
+      }
+
+      // コメントをしたuserか確認する
+      if (comment.uid != req.body.user.id) {
+        return res.status(401).json({ msg: '削除する権限がありません' })
+      }
+
+      // 削除するコメントを取得する
+      post.comments = post.comments.filter((elm) => elm._id != comment._id)
+
+      await post.save()
+      res.json(post.comments)
+    } catch (err) {
+      console.error(err.message)
       res.status(500).send({ msg: 'Server Error' })
     }
   },

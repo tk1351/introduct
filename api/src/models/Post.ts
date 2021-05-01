@@ -12,6 +12,7 @@ export interface PostModel extends Document {
   url: string
   likes: { uid: string }[]
   comments: {
+    _id?: string
     uid: string
     text: string
     name: string
