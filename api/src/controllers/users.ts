@@ -8,12 +8,6 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-interface Error {
-  errors: {
-    msg: string
-  }[]
-}
-
 interface RegisterBody {
   name: string
   email: string
@@ -32,12 +26,10 @@ export default {
   testRouter: (_: Request, res: Response): void => {
     res.send('users router')
   },
-  getAllUsers: (_: Request, res: Response) => {
-    User.find({}, (err: Error, foundUser) => {
+  getAllUsers: (_: Request, res: Response<UserModel[] | { msg: string }>) => {
+    User.find({}, (err, foundUser) => {
       if (err) {
-        return res
-          .status(422)
-          .send({ errors: [{ msg: 'ユーザーが見つかりません' }] })
+        return res.status(422).send({ msg: 'ユーザーが見つかりません' })
       }
       return res.status(200).json(foundUser)
     })
