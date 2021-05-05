@@ -1,3 +1,4 @@
 /node_modules
+/coverage
 /src/config/default.json
 yarn-error.log

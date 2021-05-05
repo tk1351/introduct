@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import { Request, Response } from 'express'
 import User, { UserModel } from '../models/User'
 import { validationResult } from 'express-validator'
 import gravatar from 'gravatar'
