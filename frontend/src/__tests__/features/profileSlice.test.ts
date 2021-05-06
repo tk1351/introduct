@@ -6,6 +6,7 @@ import reducer, {
   createProfile,
   RegisterProfile,
   deleteProfile,
+  fetchAllProfile,
 } from '../../features/profileSlice'
 import { MyKnownError } from 'src/features/authSlice'
 
@@ -201,6 +202,102 @@ describe('profileReducer test', () => {
       expect(state.profile).toEqual(initialState.profile)
       expect(state.loading).toBeFalsy()
       expect(state.error).toEqual(dummyMsg)
+    })
+  })
+  describe('fetchAllProfile', () => {
+    const initialState: ProfileState = {
+      profile: {
+        uid: {
+          _id: '',
+          name: '',
+          avatar: '',
+        },
+        company: '',
+        website: '',
+        location: '',
+        bio: '',
+        social: {
+          twitter: '',
+          facebook: '',
+          linkedin: '',
+          instagram: '',
+          youtube: '',
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      status: 'idle',
+      profiles: [],
+      loading: true,
+      error: null,
+    }
+    it('[fetchAllProfile.pending]', () => {
+      const action = { type: fetchAllProfile.pending.type }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('loading')
+    })
+    it('[fetchAllProfile.fulfilled]', () => {
+      const dummyProfiles: Profile[] = [
+        {
+          uid: {
+            _id: 'dummy _id',
+            name: 'dummy name',
+            avatar: 'dummy avatar',
+          },
+          company: 'dummy company',
+          website: 'dummy website',
+          location: 'dummy location',
+          bio: 'dummy bio',
+          social: {
+            twitter: 'dummy twitter',
+            facebook: 'dummy facebook',
+            linkedin: 'dummy linkedin',
+            instagram: 'dummy instagram',
+            youtube: 'dummy youtube',
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          uid: {
+            _id: 'dummy _id2',
+            name: 'dummy name2',
+            avatar: 'dummy avatar2',
+          },
+          company: 'dummy company2',
+          website: 'dummy website2',
+          location: 'dummy location2',
+          bio: 'dummy bio2',
+          social: {
+            twitter: 'dummy twitter2',
+            facebook: 'dummy facebook2',
+            linkedin: 'dummy linkedin2',
+            instagram: 'dummy instagram2',
+            youtube: 'dummy youtube2',
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]
+
+      const action = {
+        type: fetchAllProfile.fulfilled.type,
+        payload: { profiles: dummyProfiles },
+      }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('succeeded')
+      expect(state.profiles).toHaveLength(2)
+      expect(state.loading).toBeFalsy()
+      expect(state.error).toBeNull()
+    })
+    it('[fetchAllProfile.rejected]', () => {
+      const dummyMsg: MyKnownError = { msg: 'dummy error' }
+      const action = { type: fetchAllProfile.rejected.type, payload: dummyMsg }
+      const state = reducer(initialState, action)
+      expect(state.status).toEqual('failed')
+      expect(state.error).toEqual(dummyMsg)
+      expect(state.profiles).toHaveLength(0)
+      expect(state.loading).toBeFalsy()
     })
   })
 })
