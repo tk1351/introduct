@@ -84,18 +84,13 @@ export const fetchAllProfile = createAsyncThunk<
   }
 })
 
-// fetchProfileByUid
-// { profile: Profile }
-// { user_id: string }
-// error
-
 export const fetchProfileByUid = createAsyncThunk<
   { profile: Profile },
-  { user_id: string },
+  string,
   AsyncThunkConfig<MyKnownError[]>
->('/profile/fetchProfileByUid', async (user_id, { rejectWithValue }) => {
+>('/profile/fetchProfileByUid', async (id, { rejectWithValue }) => {
   try {
-    const url = `/api/v1/profile/user/${user_id}`
+    const url = `/api/v1/profile/user/${id}`
     const res = await axios.get<Profile>(url)
     return { profile: res.data }
   } catch (err) {
@@ -182,8 +177,24 @@ export const profileSlice = createSlice({
         state.loading = false
       }
     })
-    // user_idごとのprofileを取得
-    // TODO: 分岐処理の追加
+    // uidごとのprofileを取得
+    builder.addCase(fetchProfileByUid.pending, (state) => {
+      state.status = 'loading'
+    })
+    builder.addCase(fetchProfileByUid.fulfilled, (state, action) => {
+      state.status = 'succeeded'
+      state.profile = action.payload.profile
+      state.loading = false
+      state.error = null
+    })
+    builder.addCase(fetchProfileByUid.rejected, (state, action) => {
+      if (action.payload) {
+        state.status = 'failed'
+        state.profile = null
+        state.error = action.payload
+        state.loading = false
+      }
+    })
     // profileの追加
     builder.addCase(createProfile.pending, (state) => {
       state.status = 'loading'
