@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
-import { Profile } from '../../features/profileSlice'
+import { ProfileData } from '../../features/profileSlice'
 import { Link } from 'react-router-dom'
 
 type Props = {
-  profile: Profile
+  profile: ProfileData
 }
 
 const ProfileItem: FC<Props> = ({ profile }) => {

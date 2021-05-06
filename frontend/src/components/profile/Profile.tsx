@@ -13,6 +13,7 @@ type PageProps = {} & RouteComponentProps<{ id: string }>
 
 const Profile: FC<PageProps> = ({ match }) => {
   const { id } = match.params
+  console.log(match)
   const dispatch = useAppDispatch()
   const profile = useAppSelector(selectProfile)
   const loading = useAppSelector(selectProfileLoading)

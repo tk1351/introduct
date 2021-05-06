@@ -6,7 +6,7 @@ import authReducer, { AuthState } from '../../../features/authSlice'
 import alertReducer, { AlertState } from '../../../features/alertSlice'
 import profileReducer, {
   ProfileState,
-  Profile,
+  ProfileData,
 } from '../../../features/profileSlice'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
@@ -27,7 +27,7 @@ describe('Rendering', () => {
     })
   })
   it('Should render correctly', () => {
-    const dummyProfiles: Profile[] = [
+    const dummyProfiles: ProfileData[] = [
       {
         uid: {
           _id: 'dummy _id',

@@ -16,7 +16,7 @@ export interface RegisterProfile {
   youtube: string
 }
 
-export interface Profile {
+export interface ProfileData {
   uid: {
     _id: string
     avatar: string
@@ -38,8 +38,8 @@ export interface Profile {
 }
 
 export interface ProfileState {
-  profile: Profile | null
-  profiles: Profile[]
+  profile: ProfileData | null
+  profiles: ProfileData[]
   loading: boolean
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: MyKnownError[] | null
@@ -54,7 +54,7 @@ const initialState: ProfileState = {
 }
 
 export const fetchCurrentProfile = createAsyncThunk<
-  { profile: Profile },
+  { profile: ProfileData },
   void,
   AsyncThunkConfig<MyKnownError[]>
 >('profile/fetchCurrentProfile', async (_, { rejectWithValue }) => {
@@ -63,7 +63,7 @@ export const fetchCurrentProfile = createAsyncThunk<
   }
   try {
     const url = '/api/v1/profile/me'
-    const res = await axios.get<Profile>(url)
+    const res = await axios.get<ProfileData>(url)
     return { profile: res.data }
   } catch (err) {
     return rejectWithValue(err.response.data)
@@ -71,13 +71,13 @@ export const fetchCurrentProfile = createAsyncThunk<
 })
 
 export const fetchAllProfile = createAsyncThunk<
-  { profiles: Profile[] },
+  { profiles: ProfileData[] },
   void,
   AsyncThunkConfig<MyKnownError[]>
 >('profile/fetchAllProfile', async (_, { rejectWithValue }) => {
   try {
     const url = '/api/v1/profile'
-    const res = await axios.get<Profile[]>(url)
+    const res = await axios.get<ProfileData[]>(url)
     return { profiles: res.data }
   } catch (err) {
     return rejectWithValue(err.response.data)
@@ -85,13 +85,13 @@ export const fetchAllProfile = createAsyncThunk<
 })
 
 export const fetchProfileByUid = createAsyncThunk<
-  { profile: Profile },
+  { profile: ProfileData },
   string,
   AsyncThunkConfig<MyKnownError[]>
 >('/profile/fetchProfileByUid', async (id, { rejectWithValue }) => {
   try {
     const url = `/api/v1/profile/user/${id}`
-    const res = await axios.get<Profile>(url)
+    const res = await axios.get<ProfileData>(url)
     return { profile: res.data }
   } catch (err) {
     return rejectWithValue(err.response.data)
@@ -99,13 +99,13 @@ export const fetchProfileByUid = createAsyncThunk<
 })
 
 export const createProfile = createAsyncThunk<
-  { profile: Profile },
+  { profile: ProfileData },
   RegisterProfile,
   AsyncThunkConfig<MyKnownError[]>
 >('profile/createProfile', async (profileData, { rejectWithValue }) => {
   try {
     const url = '/api/v1/profile'
-    const res = await axios.post<Profile>(url, profileData)
+    const res = await axios.post<ProfileData>(url, profileData)
     return { profile: res.data }
   } catch (err) {
     return rejectWithValue(err.response.data.errors)
