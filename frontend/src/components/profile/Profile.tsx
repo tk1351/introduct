@@ -8,12 +8,13 @@ import {
   selectProfileLoading,
 } from '../../features/profileSlice'
 import { RouteComponentProps, Link } from 'react-router-dom'
+import ProfileAbout from './ProfileAbout'
+import ProfileTop from './ProfileTop'
 
 type PageProps = {} & RouteComponentProps<{ id: string }>
 
 const Profile: FC<PageProps> = ({ match }) => {
   const { id } = match.params
-  console.log(match)
   const dispatch = useAppDispatch()
   const profile = useAppSelector(selectProfile)
   const loading = useAppSelector(selectProfileLoading)
@@ -38,6 +39,10 @@ const Profile: FC<PageProps> = ({ match }) => {
                 プロフィールを編集する
               </Link>
             )}
+          <div className="profile-grid my-1">
+            <ProfileTop profile={profile} />
+            <ProfileAbout profile={profile} />
+          </div>
         </Fragment>
       )}
     </Fragment>
