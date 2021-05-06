@@ -25,7 +25,11 @@ describe('profileReducer test', () => {
     })
     it('[fetchCurrentProfile.fulfilled] Should state include profile', () => {
       const dummyData: Profile = {
-        uid: 'dummy user',
+        uid: {
+          _id: 'dummy _id',
+          name: 'dummy name',
+          avatar: 'dummy avatar',
+        },
         company: 'dummy company',
         website: 'dummy website',
         location: 'dummy location',
@@ -68,7 +72,11 @@ describe('profileReducer test', () => {
   describe('clearProfile', () => {
     const initialState: ProfileState = {
       profile: {
-        uid: 'dummy user',
+        uid: {
+          _id: 'dummy _id',
+          name: 'dummy name',
+          avatar: 'dummy avatar',
+        },
         company: 'dummy company',
         website: 'dummy website',
         location: 'dummy location',
@@ -148,7 +156,11 @@ describe('profileReducer test', () => {
   describe('deleteProfile', () => {
     const initialState: ProfileState = {
       profile: {
-        uid: 'dummy user',
+        uid: {
+          _id: 'dummy _id',
+          name: 'dummy name',
+          avatar: 'dummy avatar',
+        },
         company: 'dummy company',
         website: 'dummy website',
         location: 'dummy location',

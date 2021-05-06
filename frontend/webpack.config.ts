@@ -69,7 +69,7 @@ const option: WebpackOptionsNormalized = {
     open: true,
     port: 3000,
     proxy: {
-      '/api': 'http://backend:8080',
+      '/api': 'http://api:3001',
     },
   },
 }

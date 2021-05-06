@@ -17,7 +17,11 @@ export interface RegisterProfile {
 }
 
 export interface Profile {
-  uid: string
+  uid: {
+    _id: string
+    avatar: string
+    name: string
+  }
   company: string
   website: string
   location: string
@@ -66,22 +70,6 @@ export const fetchCurrentProfile = createAsyncThunk<
   }
 })
 
-// 返り値はProfile[]
-// "social": {
-//   "twitter": "https://twitter.com/testuser2",
-//   "facebook": "https://facebook.com/testuser2",
-//   "youtube": "https://youtube.com/testuser2"
-// },
-// "_id": "6087a2148c3624005eeadf44",
-// "uid": "6082649c3b6e9e00246d239a",
-// "company": "Media",
-// "website": "https://www.media.com",
-// "location": "Tokyo",
-// "bio": "gjさlfjさlkfjさ",
-// "createdAt": "2021-04-27T05:33:08.728Z",
-// "updatedAt": "2021-04-27T23:49:47.062Z",
-// "__v": 0
-
 export const fetchAllProfile = createAsyncThunk<
   { profiles: Profile[] },
   void,
@@ -91,6 +79,25 @@ export const fetchAllProfile = createAsyncThunk<
     const url = '/api/v1/profile'
     const res = await axios.get<Profile[]>(url)
     return { profiles: res.data }
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
+})
+
+// fetchProfileByUid
+// { profile: Profile }
+// { user_id: string }
+// error
+
+export const fetchProfileByUid = createAsyncThunk<
+  { profile: Profile },
+  { user_id: string },
+  AsyncThunkConfig<MyKnownError[]>
+>('/profile/fetchProfileByUid', async (user_id, { rejectWithValue }) => {
+  try {
+    const url = `/api/v1/profile/user/${user_id}`
+    const res = await axios.get<Profile>(url)
+    return { profile: res.data }
   } catch (err) {
     return rejectWithValue(err.response.data)
   }
@@ -110,8 +117,6 @@ export const createProfile = createAsyncThunk<
   }
 })
 
-// プロフィール削除の関数
-// res.data = msg: 'ユーザーは削除されました'
 export const deleteProfile = createAsyncThunk<
   { msg: string },
   void,
@@ -177,6 +182,8 @@ export const profileSlice = createSlice({
         state.loading = false
       }
     })
+    // user_idごとのprofileを取得
+    // TODO: 分岐処理の追加
     // profileの追加
     builder.addCase(createProfile.pending, (state) => {
       state.status = 'loading'

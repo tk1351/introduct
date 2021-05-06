@@ -6,6 +6,7 @@ import {
   fetchAllProfile,
 } from '../../features/profileSlice'
 import Spinner from '../layout/Spinner'
+import ProfileItem from './ProfileItem'
 
 const Profiles: FC = () => {
   const dispatch = useAppDispatch()
@@ -13,7 +14,7 @@ const Profiles: FC = () => {
   const loading = useAppSelector(selectProfileLoading)
   useEffect(() => {
     dispatch(fetchAllProfile())
-  }, [fetchAllProfile()])
+  }, [])
 
   return (
     <Fragment>
@@ -27,7 +28,9 @@ const Profiles: FC = () => {
           </p>
           <div className="profiles">
             {profiles.length > 0 ? (
-              profiles.map((profile) => profile.bio)
+              profiles.map((profile) => (
+                <ProfileItem key={profile.uid._id} profile={profile} />
+              ))
             ) : (
               <h4>登録者はいません</h4>
             )}
