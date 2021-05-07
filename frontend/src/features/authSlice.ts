@@ -217,5 +217,6 @@ export const selectIsAuthenticated = (state: RootState) =>
   state.auth.auth.isAuthenticated
 export const selectLoading = (state: RootState) => state.auth.auth.loading
 export const selectAuthUser = (state: RootState) => state.auth.auth.user
+export const selectAuthState = (state: RootState) => state.auth.auth
 
 export default authSlice.reducer

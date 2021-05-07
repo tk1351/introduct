@@ -3,3 +3,4 @@ backend/node_modules
 backend/config/default.json
 .env
 db/
+frontend/yarn-error.log
