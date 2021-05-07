@@ -9,7 +9,7 @@ import reducer, {
   fetchAllProfile,
   fetchProfileByUid,
 } from '../../features/profileSlice'
-import { MyKnownError } from 'src/features/authSlice'
+import { MyKnownError } from '../../features/authSlice'
 
 describe('profileReducer test', () => {
   describe('fetchCurrentProfile', () => {

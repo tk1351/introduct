@@ -3,7 +3,7 @@ import axios from 'axios'
 import { MyKnownError } from './authSlice'
 import { AsyncThunkConfig, RootState } from '../app/store'
 
-interface PostData {
+export interface PostData {
   _id: string
   uid: string
   name: string
@@ -25,7 +25,7 @@ interface PostData {
   updatedAt: Date
 }
 
-interface PostState {
+export interface PostState {
   post: PostData | null
   posts: PostData[]
   loading: boolean
