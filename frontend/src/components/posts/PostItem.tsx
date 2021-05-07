@@ -31,7 +31,11 @@ const PostItem: FC<Props> = ({ post }) => {
             {post.likes.length > 0 && <span>{post.likes.length}</span>}
           </span>
         </button>
-        <Link to={`/post/${post._id}`} className="btn btn-primary">
+        <Link
+          to={`/post/${post._id}`}
+          className="btn btn-primary"
+          aria-label="commentLink"
+        >
           コメント{' '}
           {post.comments.length > 0 && (
             <span className="comment-count">{post.comments.length}</span>
