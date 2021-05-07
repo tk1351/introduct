@@ -8,16 +8,26 @@ type Props = {
 const ProfileTop: FC<Props> = ({ profile }) => {
   return (
     <div className="profile-top bg-primary p-2">
-      <img src={profile.uid.avatar} className="round-img my-1" />
+      <img
+        src={profile.uid.avatar}
+        className="round-img my-1"
+        aria-label="avatar"
+      />
       <h1 className="large">{profile.uid.name}</h1>
       <p className="lead">
-        {profile.company && <span>企業: {profile.company}</span>}
+        {profile.company && (
+          <span aria-label="company">企業: {profile.company}</span>
+        )}
       </p>
-      <p>{profile.location && <span>住所: {profile.location}</span>}</p>
+      <p>
+        {profile.location && (
+          <span aria-label="location">住所: {profile.location}</span>
+        )}
+      </p>
       <div className="icons my-1">
         {profile.website && (
           <a href={profile.website} target="_blank" rel="noopener noreferrer">
-            <i className="fas fa-globe fa-2x"></i>
+            <i className="fas fa-globe fa-2x" aria-label="website"></i>
           </a>
         )}
         {profile.social && profile.social.twitter && (
@@ -26,7 +36,7 @@ const ProfileTop: FC<Props> = ({ profile }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fab fa-twitter fa-2x"></i>
+            <i className="fab fa-twitter fa-2x" aria-label="twitter"></i>
           </a>
         )}
         {profile.social && profile.social.facebook && (
@@ -35,7 +45,7 @@ const ProfileTop: FC<Props> = ({ profile }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fab fa-facebook fa-2x"></i>
+            <i className="fab fa-facebook fa-2x" aria-label="facebook"></i>
           </a>
         )}
         {profile.social && profile.social.linkedin && (
@@ -44,7 +54,7 @@ const ProfileTop: FC<Props> = ({ profile }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fab fa-linkedin fa-2x"></i>
+            <i className="fab fa-linkedin fa-2x" aria-label="linkedin"></i>
           </a>
         )}
         {profile.social && profile.social.instagram && (
@@ -53,7 +63,7 @@ const ProfileTop: FC<Props> = ({ profile }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fab fa-instagram fa-2x"></i>
+            <i className="fab fa-instagram fa-2x" aria-label="instagram"></i>
           </a>
         )}
         {profile.social && profile.social.youtube && (
@@ -62,7 +72,7 @@ const ProfileTop: FC<Props> = ({ profile }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fab fa-youtube fa-2x"></i>
+            <i className="fab fa-youtube fa-2x" aria-label="youtube"></i>
           </a>
         )}
       </div>
